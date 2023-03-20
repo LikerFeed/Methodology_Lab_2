@@ -202,7 +202,7 @@ class List {
     }
 
     if (!foundIndex) {
-      return 0;
+      return -1;
     } else {
       return foundIndex;
     }
