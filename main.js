@@ -5,95 +5,263 @@ class Node {
     this.data = data;
   }
 }
-  
+
 class List {
-  storage = [];
-  
+  constructor() {
+    this.head = null;
+    this.tail = null;
+  }
+
   length() {
-    return this.storage.length;
+    if (!this.tail) {
+      return 0;
+    }
+    return this.tail.index + 1;
   }
 
   append(data) {
+    if (typeof data !== 'string') return;
+
     const node = new Node(data);
-    this.storage.push(node);
+
+    if (!this.head) {
+      this.head = node;
+      node.index = 0;
+    }
+
+    if (this.tail) {
+      this.tail.next = node;
+      node.index = this.tail.index + 1;
+    }
+
+    if (this.length() > 1) {
+      node.next = this.head;
+    }
+
+    this.tail = node;
   }
-  
+
   insert(data, index) { // index - position in the list (counted from 0)
-    if (index < 0 || this.storage[index] === undefined) { // error checking
+    if (this.length() === 0) { // error checking
+      throw new Error('insert: Use append() here!');
+    }
+
+    if (index < 0 || index > this.tail.index) { // error checking
       throw new Error('insert: Incorrect index value!');
     }
 
     const node = new Node(data);
-    this.storage.splice(index, 0, node);
+
+    if (index === 0) {
+      node.next = this.head;
+      node.index = 0;
+      this.head = node;
+      this.tail.next = this.head;
+    } else {
+      const found = this.get(index - 1);
+      node.next = found.next;
+      found.next = node;
+      node.index = found.index + 1;
+    }
+
+    this.correctIndex(node.next);
   }
-  
-  delete(index) {
-    if (index < 0 || this.storage[index] === undefined) { // error checking
+
+  delete(index) { // error checking
+    if (index < 0 || index > this.tail.index || typeof(index) !== 'number') {
       throw new Error('delete: Incorrect index value!');
     }
 
-    const element = this.get(index);
-    this.storage.splice(index, 1);
-    return element;
-  }
+    let deletedElement = null;
+
+    if (this.length() === 0) {
+      return;
+    } else if (this.length() === 1) {
+        deletedElement = this.head;
+        this.head = null;
+        this.tail = null;
+    } else {
+      deletedElement = this.get(index);
+
+      if (deletedElement.index === 0) {
+        this.head = deletedElement.next;
+        this.tail.next = this.head;
+        this.correctIndex(this.head, 'dec');
+      } else if (deletedElement.index === this.tail.index) {
+        const prevElem = this.get(index - 1);
+        prevElem.next = this.head;
+      } else {
+        const prevElem = this.get(index - 1);
+        const nextElem = this.get(index + 1);
+        prevElem.next = nextElem;
   
+        this.correctIndex(nextElem, 'dec');
+      }
+    }
+
+    return deletedElement;
+  }
+
   deleteAll(data) {
-    for (let i = 0; i < this.length(); i++) {
-      if (this.storage[i].data === data) {
-        this.delete(i);
+    if (typeof data !== 'string' || this.length() === 0) {
+      return;
+    } else if (this.length() === 1) {
+      if (this.head.data === data) {
+        this.delete(this.head.index);
+      }
+    } else {
+      let index = 0;
+      let cur = this.head;
+      while (cur.index >= index) {
+        if (cur.data === data) {
+          this.delete(cur.index);
+        }
+  
+        index = cur.index;
+        cur = cur.next;
       }
     }
   }
-  
+
   get(index) {
-    if (index < 0 || this.storage[index] === undefined) {
+    if (index < 0 || index > this.tail.index || this.length() === 0 ) { // error checking
       throw new Error('get: Incorrect index value!');
+    } else if (this.length() === 1) {
+        return this.head;
+    } else {
+      let i = 0;
+      let cur = this.head;
+      while (cur.index >= i) {
+        if (cur.index === index) {
+          return cur;
+        }
+        i = cur.index;
+        cur = cur.next;
+      }
     }
-    return this.storage[index];
   }
-  
+
   clone() {
     const clonedList = new List();
-    for (const element of this.storage) {
-      clonedList.append(element.data);
+
+    if (this.length() === 1) {
+      clonedList.append(this.head.data);
+    } else if (this.length() > 1) {
+      let cur = this.head;
+      let index = 0;
+      while (cur.index >= index) {
+        clonedList.append(cur.data);
+        index = cur.index;
+        cur = cur.next;
+      }
     }
+
     return clonedList;
   }
-  
+
   reverse() {
-    this.storage.reverse();
+    if (this.length() < 2) return;
+
+    const length = this.length();
+    for (let i = 0; i < length - 1; i++) {
+      this.insert(this.delete(this.tail.index).data, i);
+    }
   }
 
   findFirst(data) {
-    for (let i = 0; i < this.length(); i++) {
-      if (this.storage[i].data === data) {
-        return i;
+    if (typeof data !== 'string') return;
+
+    let index = 0;
+    let cur = this.head;
+
+    while (cur.index >= index) {
+      if (cur.data === data) {
+        return cur.index;
       }
+      index = cur.index;
+      cur = cur.next;
     }
+
     return -1;
   }
-  
+
   findLast(data) {
-    for (let i = this.length() - 1; i >= 0; i--) {
-      if (this.storage[i].data === data) {
-        return i;
+    if (typeof data !== 'string') return;
+    
+    let index = 0;
+    let foundIndex = null;
+    let cur = this.head;
+
+    while (cur.index >= index) {
+      if (cur.data === data) {
+        foundIndex = cur.index;
+      }
+
+      index = cur.index;
+      cur = cur.next;
+    }
+
+    if (!foundIndex) {
+      return 0;
+    } else {
+      return foundIndex;
+    }
+  }
+
+  clear() {
+    this.head = null;
+    this.tail = null;
+  }
+
+  extend(list) {
+    let index = 0;
+    let cur = list.head;
+
+    while (cur.index >= index) {
+      this.append(cur.data);
+      index = cur.index;
+      cur = cur.next;
+    }
+  }
+
+  arrayFunc() {
+    const output = [];
+
+    if (this.length() === 1) {
+      output.push(this.head);
+    } else if (this.length() > 1) {
+      let index = 0;
+      let cur = this.head;
+
+      while (cur.index >= index) {
+        output.push(cur);
+        index = cur.index;
+        cur = cur.next;
       }
     }
-    return -1;
+    
+    return output;
   }
-  
-  clear() {
-    this.storage.splice(0, this.length());
-  }
-  
-  extend(list) {
-    for (const element of list.arrayFunc()) {
-      this.storage.push(element);
+
+  correctIndex(startElement, order = 'inc') {
+    let i = 0;
+    let cur = startElement;
+
+    if (order === 'inc') {
+      while (cur.index >= i) {
+        cur.index++;
+        i = cur.index;
+        cur = cur.next;
+      }
+    } else if (order === 'dec') {
+      while (cur.index >= i) {
+        cur.index--;
+        i = cur.index;
+        cur = cur.next;
+      }
+    } else {
+      return;
     }
-  }
-  
-  arrayFunc() { 
-    return this.storage;
   }
 }
 

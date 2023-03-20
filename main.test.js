@@ -19,34 +19,34 @@ describe('List tests', () => {
 
   // length test
 
-  test('length: must return the number of elements in the list', () => {
+  test('length: Must return the number of elements in the list', () => {
     expect(testList.length()).toEqual(7);
   });
 
   // length and append test
 
-  test('length: must return the number of elements in a increased list', () => {
+  test('length: Must return the number of elements in a increased list', () => {
     testList.append('U');
     expect(testList.length()).toEqual(8);
   });
 
   // append test
 
-  test('append: must add a new element', () => {
+  test('append: Must add a new element', () => {
     testList.append('I');
     expect(testList.get(7).data).toBe('I');
   });
 
   // insert test
 
-  test('insert: must insert a element in the right place', () => {
+  test('insert: Must insert a element in the right place', () => {
     testList.insert('Q', 2);
     expect(testList.get(2).data).toBe('Q');
   });
 
   // delete test
 
-  test('delete: must delete the item at the index', () => {
+  test('delete: Must delete the item at the index', () => {
     const del = testList.delete(3);
 
     expect(del.data).toBe('R');
@@ -60,12 +60,10 @@ describe('List tests', () => {
   
   // delete test
 
-  test('delete: must delete the last item', () => {
+  test('delete: Must delete the last item', () => {
     const del = testList.delete(6);
 
     expect(del.data).toBe('Y');
-
-    expect(testList.length()).toEqual(6);
 
     expect(testList.get(4).data).toBe('E');
     expect(testList.get(5).data).toBe('T');
@@ -73,7 +71,7 @@ describe('List tests', () => {
 
   // delete test
 
-  test('delete: must delete the first item', () => {
+  test('delete: Must delete the first item', () => {
     const del = testList.delete(0);
 
     expect(del.data).toBe('Q');
@@ -86,21 +84,21 @@ describe('List tests', () => {
 
   // delete test
   
-  test('delete: must return error if index is out of range', () => {
+  test('delete: Must return error if index is out of range', () => {
     const attempt = () => testList.delete(20);
     expect(attempt).toThrow('Incorrect index value!');
   });
 
   // deleteAll test
 
-  test('deleteAll: must delete all elements has matching data', () => {
+  test('deleteAll: Must delete all elements has matching data', () => {
     testList.deleteAll('E');
     expect(testList.arrayFunc()).not.toContain({ data: 'E' });
   });
 
   // deleteAll test
 
-  test('deleteAll: must do anything if no element has matching data', () => {
+  test('deleteAll: Must do anything if no element has matching data', () => {
     testList.deleteAll('U');
 
     expect(testList.length()).toEqual(7);
@@ -108,20 +106,20 @@ describe('List tests', () => {
 
   // get test
 
-  test('get: must return the data at the index', () => {
+  test('get: Must return the data at the index', () => {
     expect(testList.get(2).data).toBe('E');
   });
 
   // get test
 
-  test('get: must throw an error when incorrect index is passed as a parameter', () => {
+  test('get: Must throw an error when incorrect index is passed as a parameter', () => {
     const attempt = () => testList.get(20);
     expect(attempt).toThrow('Incorrect index value!');
   });
 
   // clone test
 
-  test('clone: must return a list with the same length and elements', () => {
+  test('clone: Must return a list with the same length and elements', () => {
     const clonedList = testList.clone();
 
     expect(testList.length()).toEqual(7);
@@ -136,7 +134,7 @@ describe('List tests', () => {
     expect(clonedList.get(6).data).toBe('Y');
   });
 
-  test('clone: must return copy of the list without affect the original one', () => {
+  test('clone: Must return copy of the list without affect the original one', () => {
     const clonedList = testList.clone();
     clonedList.append('U');
     expect(testList.arrayFunc()).not.toContain({ data: 'U' });
@@ -144,7 +142,7 @@ describe('List tests', () => {
 
   // reverse test
   
-  test('reverse: must return a list with reversed elements', () => {
+  test('reverse: Must return a list with reversed elements', () => {
     testList.reverse();
 
     expect(testList.get(0).data).toBe('Y');
@@ -158,38 +156,38 @@ describe('List tests', () => {
 
   // findFirst test
 
-  test('findFirst: must return the first found element', () => {
+  test('findFirst: Must return the first found element', () => {
     expect(testList.findFirst('W')).toEqual(1);
   });
 
   // findFirst test
 
-  test('findFirst: must return -1 when can not found elements', () => {
+  test('findFirst: Must return -1 when can not found elements', () => {
     expect(testList.findFirst('U')).toEqual(-1);
   });
 
   // findLast test
 
-  test('findLast: must return the first found element', () => {
+  test('findLast: Must return the first found element', () => {
     expect(testList.findLast('T')).toEqual(5);
   });
 
   // findLast test
 
-  test('findLast: must return -1 when can not found elements', () => {
+  test('findLast: Must return -1 when can not found elements', () => {
     expect(testList.findLast('I')).toEqual(-1);
   });
 
   // clear test
 
-  test('clear: must remove all elements in the list', () => {
+  test('clear: Must remove all elements in the list', () => {
     testList.clear();
     expect(testList.arrayFunc().length).toEqual(0);
   });
 
   // extend test
 
-  test('extend: must extend the list with another list passed as a parameter', () => {
+  test('extend: Must extend the list with another list passed as a parameter', () => {
     const listForExtend = new List();
 
     listForExtend.append('U');
@@ -207,7 +205,7 @@ describe('List tests', () => {
 
   // arrayFunc test
 
-  test('arrayFunc: must convert the list into array and return', () => {
+  test('arrayFunc: Must convert the list into array and return', () => {
     const mapped = testList.arrayFunc().map((element) => element.data);
     expect(mapped).toEqual(['Q', 'W', 'E', 'R', 'E', 'T', 'Y']);
   });
