@@ -6,7 +6,7 @@ class Node {
   }
 }
   
-class ArrayBasedList {
+class List {
   storage = [];
   
   length() {
@@ -53,7 +53,7 @@ class ArrayBasedList {
   }
   
   clone() {
-    const clonedList = new ArrayBasedList();
+    const clonedList = new List();
     for (const element of this.storage) {
       clonedList.append(element.data);
     }
@@ -97,7 +97,9 @@ class ArrayBasedList {
   }
 }
 
-const testList = new ArrayBasedList();
+module.exports = List;
+
+const testList = new List();
 
 console.log(testList.length(), '\n'); // output: 0
 
@@ -125,11 +127,11 @@ console.log(testList.get(2), '\n'); // output: 'T'
 const clonedList = testList.clone(); // output: ['W', 'E', 'T', 'Y']
 console.log(clonedList.arrayFunc(), '\n');
 
-console.log(clonedList.findFirst("Y")); // output: 3
-console.log(clonedList.findFirst("U"), '\n'); // output: -1
+console.log(clonedList.findFirst('Y')); // output: 3
+console.log(clonedList.findFirst('U'), '\n'); // output: -1
 
-console.log(clonedList.findLast("E")); // output: 1
-console.log(clonedList.findLast("I"), '\n'); // output: -1
+console.log(clonedList.findLast('E')); // output: 1
+console.log(clonedList.findLast('I'), '\n'); // output: -1
 
 clonedList.extend(testList); // output: ['W', 'E', 'T', 'Y', 'W', 'E', 'T', 'Y']
 console.log(clonedList.arrayFunc(), '\n');
