@@ -39,7 +39,7 @@ $ npm start
 or
 
 ```
-$ node main.js
+$ node example.js
 ```
 
 ### To test application:
